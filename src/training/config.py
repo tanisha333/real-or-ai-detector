@@ -17,7 +17,7 @@ class TrainingConfig:
     """
 
     # ── Model ────────────────────────────────────────────────────────────────
-    model_name: str = "openai/clip-vit-large-patch14"
+    model_name: str = "openai/clip-vit-base-patch32"
     """CLIP variant to use as the frozen backbone.
     The paper's best results use ViT-L/14; ViT-B/32 trains faster for quick runs."""
 
@@ -106,3 +106,4 @@ class TrainingConfig:
 
     save_best_only: bool = True
     """Save only the best checkpoint (by val accuracy) rather than every epoch."""
+

@@ -49,27 +49,49 @@ class BinaryImageDataset(Dataset):
             raise ValueError("Either root_dir or file_list must be provided.")
 
     def _load_from_directory(self, root_dir: str):
+        """Loads images from a root directory.
+
+        Supports two layouts:
+        1. Flat layout:  root/real/   + root/fake/
+        2. Per-generator test layout: root/real/   + root/<generator_name>/  (one folder per AI model)
+           Any sub-folder that is NOT named 'real' or 'fake' is treated as a
+           named AI generator with label 1.
+        """
         root = Path(root_dir)
         real_dir = root / "real"
         fake_dir = root / "fake"
 
+        # Always load real images from root/real/ if present
         if real_dir.exists():
-            for p in real_dir.iterdir():
+            for p in sorted(real_dir.iterdir()):
                 if p.is_file() and p.suffix.lower() in self.SUPPORTED_EXTENSIONS:
                     self.samples.append({
                         "path": str(p),
                         "label": 0,
-                        "generator": "nature_camera"
+                        "generator": "real"
                     })
 
         if fake_dir.exists():
-            for p in fake_dir.iterdir():
+            # Flat layout: single fake/ folder (generator name inferred from filenames)
+            for p in sorted(fake_dir.iterdir()):
                 if p.is_file() and p.suffix.lower() in self.SUPPORTED_EXTENSIONS:
                     self.samples.append({
                         "path": str(p),
                         "label": 1,
                         "generator": "ai_generator"
                     })
+        else:
+            # Per-generator layout: every sub-folder that isn't 'real' is an AI generator
+            for sub in sorted(root.iterdir()):
+                if sub.is_dir() and sub.name.lower() != "real":
+                    generator_name = sub.name  # e.g. "midjourney", "biggan", "adm"
+                    for p in sorted(sub.iterdir()):
+                        if p.is_file() and p.suffix.lower() in self.SUPPORTED_EXTENSIONS:
+                            self.samples.append({
+                                "path": str(p),
+                                "label": 1,
+                                "generator": generator_name
+                            })
 
     def __len__(self) -> int:
         return len(self.samples)
