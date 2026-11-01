@@ -1,56 +1,9 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Jupyter / Virtualenv
-.ipynb_checkpoints
-.env
-.venv
-
-# Datasets and large checkpoints (Strictly ignored)
-data/raw/
-data/processed/
-data/*.parquet
-data/*.csv
-!data/README.md
-!data/**/.gitkeep
-datasets/
-*.zip
-*.tar
-*.tar.gz
+﻿data/
 checkpoints/
-weights/
 *.pt
 *.pth
-*.onnx
-*.bin
-*.h5
+.env
+__pycache__/
+.venv/
 
-# Caches
-.cache/
-huggingface/
-
-# OS specific
-.DS_Store
-Thumbs.db
+results/
